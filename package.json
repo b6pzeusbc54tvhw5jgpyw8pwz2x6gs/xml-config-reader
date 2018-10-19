@@ -15,6 +15,9 @@
     "pkg": "^4.3.4",
     "xml2js": "^0.4.19"
   },
+  "scripts": {
+    "package": "pkg . --targets node8-linux-x64,node8-macos-x64,node8-win-x64 --output dist/xcr"
+  },
   "pkg": {
     "scripts": "src/**"
   }

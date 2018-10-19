@@ -6,7 +6,10 @@ const temp = require("temp");
 
 module.exports = (file, key) => new Promise( (resolve,reject) => {
 
-  file = path.resolve( process.cwd(), file )
+  if( ! path.isAbsolute(file)) {
+    file = path.resolve( process.cwd(), file )
+  }
+
   let fullText
   try {
     fullText = fs.readFileSync(file, 'utf8')
@@ -29,14 +32,15 @@ module.exports = (file, key) => new Promise( (resolve,reject) => {
   let currentLine = 0
 
   const tagOpenMatcher = /^\s*?<([a-zA-Z0-9][a-zA-Z0-9-_]*?)>/
-  const valueWithTagCloseMatcher = /^(.+?)<\/([a-zA-Z0-9][a-zA-Z0-9]*?)>/
+  const valueWithTagCloseMatcher = /^(.+?)<\/([a-zA-Z0-9][a-zA-Z0-9-_]*?)>/
   const valueMatcher = /(.*)/
-  const tagCloseMatcher = /^\s*?<\/([a-zA-Z0-9][a-zA-Z0-9]*?)>/
+  const tagCloseMatcher = /^\s*?<\/([a-zA-Z0-9][a-zA-Z0-9-_]*?)>/
   let collectingValue = ''
 
   const lr = new LineByLineReader(tmpName)
   lr.on('line', (line) => {
 
+    if( currentLine > 190 ) debugger
     currentLine++
 
     let waitValue = false
