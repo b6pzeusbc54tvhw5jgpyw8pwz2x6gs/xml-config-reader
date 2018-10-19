@@ -1,11 +1,20 @@
 const LineByLineReader = require('line-by-line')
 const decomment = require('decomment');
 const fs = require('fs')
+const path = require('path')
 const temp = require("temp");
 
 module.exports = (file, key) => new Promise( (resolve,reject) => {
 
-  let fullText = fs.readFileSync(file, 'utf8')
+  file = path.resolve( process.cwd(), file )
+  let fullText
+  try {
+    fullText = fs.readFileSync(file, 'utf8')
+  } catch( e ) {
+    console.log(e)
+    process.exit(1)
+  }
+
   fullText = decomment.html(fullText, { space: true })
   const tmpName = temp.path({suffix: '.tmp'});
   fs.writeFileSync(tmpName, fullText, 'utf8')

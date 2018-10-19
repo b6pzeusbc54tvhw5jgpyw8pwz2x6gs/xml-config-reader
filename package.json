@@ -1,7 +1,8 @@
 {
   "name": "xml-config-reader",
   "version": "1.0.0",
-  "main": "src/index.js",
+  "main": "src/xcr.js",
+  "bin": "src/xcr.js",
   "license": "MIT",
   "dependencies": {
     "commander": "^2.19.0",
@@ -11,6 +12,10 @@
   },
   "devDependencies": {
     "dot-object": "^1.7.0",
+    "pkg": "^4.3.4",
     "xml2js": "^0.4.19"
+  },
+  "pkg": {
+    "scripts": "src/**"
   }
 }

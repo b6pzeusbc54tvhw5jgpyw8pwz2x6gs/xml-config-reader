@@ -4,6 +4,8 @@ const program = require('commander')
 
 let paths = []
 
+console.log(process.cwd())
+
 program
   .option('-d, --debug', 'enable debug mode')
 

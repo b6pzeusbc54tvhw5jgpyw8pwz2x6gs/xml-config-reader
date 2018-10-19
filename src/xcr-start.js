@@ -8,7 +8,7 @@ const cmd = `xcr start`
 
 program
   .option('-k, --key [dot.notation.key]', 'by this key find value')
-  .option('-f, --files <xml-file-paths>', 'comma seperated xml config files')
+  .option('-f, --files <xml-file-paths>', 'comma seperated xml config files', list)
   .on('--help', () => {
     console.log()
     console.log(`

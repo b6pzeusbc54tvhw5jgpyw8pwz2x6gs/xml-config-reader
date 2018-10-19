@@ -2,6 +2,8 @@
 
 const program = require('commander')
 
+const cmd = `xcr files`
+
 let paths = []
 
 program
@@ -9,10 +11,12 @@ program
   .action( files => paths = files )
   .on('--help', () => {
     console.log('');
-    console.log('Examples:');
-    console.log('  $ ./xcr files example*')
-    console.log('  $ ./xcr files example*.xml')
-    console.log('  $ ./xcr files example1.xml example2.xml')
+    console.log(`
+Examples:
+  $ ${cmd} example*
+  $ ${cmd} example*.xml
+  $ ${cmd} example1.xml example2.xml
+    `.trim())
   })
   .parse(process.argv)
 
