@@ -2,71 +2,79 @@ import dynamic from 'next/dynamic'
 import { Box, Heading, Button } from 'rebass'
 import Dropzone from 'react-dropzone'
 import axios from 'axios'
+import Select from 'react-select'
+import styled from 'styled-components'
+import pick from 'lodash/pick'
+import map from 'lodash/map'
 
-const MonacoEditor = dynamic(import('./MonacoEditor'), {ssr: false})
+import XmlConfig from './component/XmlConfig'
+import { parseString } from 'xml2js'
+import { optionArrSelector } from './selector'
 
-const request = axios.create({
-  baseURL: '/',
-  timeout: 3000,
-});
+const SelectBox = styled.div`
+  width: 200px;
+  margin: 20px;
+`
 
 class Index extends React.Component {
-  constructor() {
-    super()
-    this.state = { files: [], xmlText: 'drop and drop your xml file' }
+  state = {
+    selectedOption: null,
+    xmlConfigArr: [],
+    jsonConfig: [],
+  }
+
+  handleChange = (selectedOption) => {
+    this.setState({ selectedOption })
+    console.log(`Option selected:`, selectedOption)
   }
 
   onDrop = (files) => {
-    this.setState({ files })
-    console.log(files[0])
-    const formData = new FormData()
-    formData.append('image', files[0] )
-    const reader = new FileReader()
-    reader.onload = (e) => {
-      this.setState({ xmlText: e.target.result })
-    };
-    reader.readAsText(files[0])
-    request.post( '/api/v1/upload', formData )
+    files.forEach( file => {
+      const reader = new FileReader()
+      reader.onload = (e) => {
+        let config = pick(file, [
+          'lastModified', 'name', 'preview',
+          'size', 'type', 'webkitRelativePath',
+        ])
+        config = { ...config, text: e.target.result }
+        this.setState({ xmlConfigArr: [ ...this.state.xmlConfigArr, config ]})
+        parseString( config.text, { explicitArray: false }, (err,jsonConfig) => {
+          if(err) {
+            console.log(err)
+            return
+          }
+          this.setState({ jsonConfig })
+        })
+      }
+      reader.readAsText(file)
+    })
   }
 
-  componentDidMount() {
-
-  /*
-    window.MonacoEnvironment = {
-      baseUrl: '/monaco-editor-external',
-      getWorkerUrl: (moduleId, label) => {
-        return './editor.worker.bundle.js'
-      }
-    }
-
-    this.editor = monaco.editor.createDiffEditor(this.containerElement, {
-      value: [`
-<name>yoo</name>
-<name>yoo</name>
-<name>yoo</name>
-      `.trim()].join('\n'),
-      language: 'xml'
-    })
-    */
+  handleInputChange = key => {
+    const optionArr = optionArrSelector( this.state, { key })
+    console.log(optionArr)
   }
 
   render() {
     return (
       <Box>
-        <Heading>Hello</Heading>
-        <Button>Rebass</Button>
+        <Heading>Hello Rebass</Heading>
+        <SelectBox>
+          <Select
+            instanceId='key'
+            value={this.selectedOption}
+            onChange={this.handleChange}
+            onInputChange={this.handleInputChange}
+            options={this.state.optionArr}
+          />
+        </SelectBox>
         <Dropzone onDrop={this.onDrop.bind(this)}>
           <p>Try dropping some files here, or click to select files to upload.</p>
         </Dropzone>
         <aside>
           <h2>Dropped files</h2>
-          <ul>
-            {
-              this.state.files.map(f => <li key={f.name}>{f.name} - {f.size} bytes</li>)
-            }
-          </ul>
+          {this.state.xmlConfigArr.map( (xc,i) => <XmlConfig key={i} {...xc}/>)}
         </aside>
-        <MonacoEditor language="javascript" value={this.state.xmlText} />
       </Box>
     )
   }

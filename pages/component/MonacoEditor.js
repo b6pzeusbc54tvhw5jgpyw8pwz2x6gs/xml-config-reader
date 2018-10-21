@@ -3,10 +3,9 @@ import * as monaco from 'monaco-editor'
 import styled from 'styled-components'
 
 const EditorContainer = styled.div`
-  width: 400px;
+  width: 100%;
   height: 400px;
 `
-
 
 window.MonacoEnvironment = {
   // what is the baseUrl
@@ -21,6 +20,7 @@ class MonacoEditor extends React.Component {
   componentDidMount() {
     this.editor = monaco.editor.create(this.monacoNode, {
       value: this.props.value,
+      theme: 'vs-dark',
       language: 'xml'
     })
   }

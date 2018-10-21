@@ -28,7 +28,10 @@ app.prepare().then(() => {
 
   server.use('/monaco-editor-external', express.static(`${__dirname}/.monaco-dist`))
 
-  server.get("*", nextHandle)
+  server.get("*", (req,res) => {
+    const parsedUrl = parse(req.url, true)
+    nextHandle(req,res, parsedUrl)
+  })
 
   const port = 3000
   server.listen(port, (err) => {
