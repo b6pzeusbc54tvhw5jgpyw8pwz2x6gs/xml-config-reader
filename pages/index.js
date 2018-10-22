@@ -2,7 +2,7 @@ import dynamic from 'next/dynamic'
 import { Box, Heading, Button } from 'rebass'
 import Dropzone from 'react-dropzone'
 import axios from 'axios'
-import Select from 'react-select'
+import Select, { components } from 'react-select';
 import styled from 'styled-components'
 import pick from 'lodash/pick'
 import map from 'lodash/map'
@@ -16,6 +16,16 @@ const SelectBox = styled.div`
   margin: 20px;
 `
 
+const SingleValue = ({ children, ...props }) => {
+  const { oriLabel } = props.data
+  const newProps = { ...props, data: { ...props.data, label: oriLabel }}
+  return (
+    <components.SingleValue {...newProps}>
+      {newProps.data.label}
+    </components.SingleValue>
+  )
+}
+
 class Index extends React.Component {
   state = {
     selectedOptionKey: '',
@@ -25,8 +35,8 @@ class Index extends React.Component {
 
   handleChange = (option) => {
     const { key } = option
-    // const optionArr = optionArrSelector( this.state, { key: '' })
-    // this.setState({ selectedOptionKey: key, optionArr })
+    const optionArr = optionArrSelector( this.state, { key: '' })
+    this.setState({ selectedOptionKey: key, optionArr })
     console.log(`Option selected:`, option)
   }
 
@@ -63,8 +73,6 @@ class Index extends React.Component {
   }
 
   render() {
-    console.log(this.state.optionArr)
-    console.log(this.state.selectedOptionKey)
     return (
       <Box>
         <Heading>Hello Rebass</Heading>
@@ -80,6 +88,7 @@ class Index extends React.Component {
             filterOption={() => true}
             formatOptionLabel={({ key, label })=> <div dangerouslySetInnerHTML={{ __html: label }}/>}
             getValue={() => { return 'aaaa' }}
+            components={{SingleValue}}
           />
         </SelectBox>
         <Dropzone onDrop={this.onDrop.bind(this)}>

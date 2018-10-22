@@ -11,7 +11,9 @@ class XmlConfig extends React.Component {
     return (
       <div>
         /* for debug */
-        <pre style={{ width: 400, overflow: 'scroll' }}>{JSON.stringify(this.props,null,2)}</pre>
+        <pre style={{ width: 400, overflow: 'scroll' }}>
+          {JSON.stringify(this.props,null,2)}
+        </pre>
         <MonacoEditor value={this.props.text}/>
       </div>
     )

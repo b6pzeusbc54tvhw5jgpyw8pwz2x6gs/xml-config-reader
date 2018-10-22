@@ -23,6 +23,7 @@ class MonacoEditor extends React.Component {
       theme: 'vs-dark',
       language: 'xml'
     })
+    window.__editor = this.editor
   }
 
   componentDidUpdate(prevProps) {

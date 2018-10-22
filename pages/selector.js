@@ -35,7 +35,7 @@ export const optionArrSelector = createSelector([
   // let resultArr = fuzzysort.go(key, keyValArr, { keys:['key','val']})
   if( ! key ) {
     return keyValArr.map( keyVal => {
-      return { key: keyVal.key, label: keyVal.key }
+      return { key: keyVal.key, label: keyVal.key, oriLabel: keyVal.key }
     })
   }
   let resultArr = fuzzysort.go(key, keyValArr, { key: 'key' })
