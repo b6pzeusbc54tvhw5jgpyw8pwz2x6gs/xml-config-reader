@@ -3,3 +3,4 @@ dist/
 
 .monaco-dist/
 .next/
+.DS_Store

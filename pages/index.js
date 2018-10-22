@@ -18,14 +18,16 @@ const SelectBox = styled.div`
 
 class Index extends React.Component {
   state = {
-    selectedOption: null,
+    selectedOptionKey: '',
     xmlConfigArr: [],
     jsonConfig: [],
   }
 
-  handleChange = (selectedOption) => {
-    this.setState({ selectedOption })
-    console.log(`Option selected:`, selectedOption)
+  handleChange = (option) => {
+    const { key } = option
+    // const optionArr = optionArrSelector( this.state, { key: '' })
+    // this.setState({ selectedOptionKey: key, optionArr })
+    console.log(`Option selected:`, option)
   }
 
   onDrop = (files) => {
@@ -50,22 +52,34 @@ class Index extends React.Component {
     })
   }
 
-  handleInputChange = key => {
+  handleInputChange = (key, { action })=> {
+    if( action === "set-value" || action === 'input-blur' || action === 'menu-close') {
+      return
+    }
+
+    // "input-change",
     const optionArr = optionArrSelector( this.state, { key })
-    console.log(optionArr)
+    this.setState({ optionArr })
   }
 
   render() {
+    console.log(this.state.optionArr)
+    console.log(this.state.selectedOptionKey)
     return (
       <Box>
         <Heading>Hello Rebass</Heading>
         <SelectBox>
           <Select
             instanceId='key'
-            value={this.selectedOption}
+            /* value={this.state.selectedOptionKey} */
             onChange={this.handleChange}
             onInputChange={this.handleInputChange}
             options={this.state.optionArr}
+            getOptionValue={option => option.key}
+            getOptionLabel={option => option.oriLabel}
+            filterOption={() => true}
+            formatOptionLabel={({ key, label })=> <div dangerouslySetInnerHTML={{ __html: label }}/>}
+            getValue={() => { return 'aaaa' }}
           />
         </SelectBox>
         <Dropzone onDrop={this.onDrop.bind(this)}>
